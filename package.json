@@ -1,0 +1,32 @@
+{
+    "name": "blp",
+    "version": "1.0.0",
+    "description": "Blank Line Parser. Convert text into array of objects. Nesting supported.",
+    "author": "CMTV",
+    "license": "MIT",
+    
+    "keywords": [
+        "parser",
+        "parse",
+        "blank-line",
+        "split"
+    ],
+
+    "main": "dist/index.js",
+    "repository": "git://github.com/CMTV/blp.git",
+
+    "scripts": {
+        "build": "npx tsc && npx tsc-alias"
+    },
+
+    "devDependencies": {
+        "ts-node": "^10.6.0",
+        "tsc-alias": "^1.6.4",
+        "tsconfig-paths": "^3.12.0",
+        "typescript": "^4.6.2"
+    },
+
+    "dependencies": {
+        "yaml": "^2.0.0-10"
+    }
+}
