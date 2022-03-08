@@ -6,7 +6,7 @@ import { Parser } from "src/parser/Parser";
 import { ParseResult } from "src/parser/ParseResult";
 import util from "src/parser/util";
 
-export default
+export
 {
     Block,
     BlockObject,
@@ -18,4 +18,4 @@ export default
     ParseResult,
 
     util
-}
+};

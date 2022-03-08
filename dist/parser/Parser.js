@@ -9,6 +9,8 @@ var util_1 = __importDefault(require("../parser/util"));
 var Heap_1 = require("./Heap");
 var Parser = /** @class */ (function () {
     function Parser() {
+        this.blocks = [];
+        this.inliners = [];
     }
     Parser.prototype.parse = function (str, parent) {
         if (parent === void 0) { parent = new Heap_1.Heap; }

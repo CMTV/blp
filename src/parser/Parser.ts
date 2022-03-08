@@ -9,8 +9,8 @@ export class Parser
     rootPath: string;
     mustaches: { [key: string]: any };
 
-    blocks: typeof Block[];
-    inliners: typeof Inliner[];
+    blocks: typeof Block[] = [];
+    inliners: typeof Inliner[] = [];
                                                                                                                                   
     parse(str: string, parent: ParseResult|Heap = new Heap): ParseResult
     {

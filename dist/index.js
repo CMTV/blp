@@ -3,19 +3,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
+exports.util = exports.ParseResult = exports.Parser = exports.Heap = exports.Inliner = exports.BlockObject = exports.Block = void 0;
 var Block_1 = require("./block/Block");
+exports.Block = Block_1.Block;
 var BlockObject_1 = require("./block/BlockObject");
+exports.BlockObject = BlockObject_1.BlockObject;
 var Inliner_1 = require("./inliner/Inliner");
+exports.Inliner = Inliner_1.Inliner;
 var Heap_1 = require("./parser/Heap");
+exports.Heap = Heap_1.Heap;
 var Parser_1 = require("./parser/Parser");
+exports.Parser = Parser_1.Parser;
 var ParseResult_1 = require("./parser/ParseResult");
+exports.ParseResult = ParseResult_1.ParseResult;
 var util_1 = __importDefault(require("./parser/util"));
-exports["default"] = {
-    Block: Block_1.Block,
-    BlockObject: BlockObject_1.BlockObject,
-    Inliner: Inliner_1.Inliner,
-    Heap: Heap_1.Heap,
-    Parser: Parser_1.Parser,
-    ParseResult: ParseResult_1.ParseResult,
-    util: util_1["default"]
-};
+exports.util = util_1["default"];
