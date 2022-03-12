@@ -1,33 +1,33 @@
-import { Block } from "src/block/Block";
-import { Inliner } from "src/inliner/Inliner";
+import { BlockFactory } from "src/factory/BlockFactory";
+import { InlinerFactory } from "src/factory/InlinerFactory";
 import { ParseResult } from "src/parser/ParseResult";
-import parseUtils from 'src/parser/util';
-import { Heap } from "./Heap";
+import { Heap } from "src/parser/Heap";
+import parseUtil from "src/parser/util";
 
 export class Parser
 {
-    rootPath: string;
-    mustaches: { [key: string]: any };
+    meta: object;
 
-    blocks: typeof Block[] = [];
-    inliners: typeof Inliner[] = [];
-                                                                                                                                  
-    parse(str: string, parent: ParseResult|Heap = new Heap): ParseResult
+    fBlocks: BlockFactory<any>[] = [];
+    fInliners: InlinerFactory<any>[] = [];
+
+    parse(str: string, parent: ParseResult = null): ParseResult
     {
         let result = new ParseResult;
-            result.heap = parent instanceof ParseResult ? parent.heap : parent;
+            result.parent = parent;
+            result.heap = parent ? parent.heap : new Heap;
 
         if (!str)
             return result;
 
-        str = parseUtils.removeCaret(str);
-        str = parseUtils.reduceSpaceLines(str);
-        str = parseUtils.removeIndent(str);
+        str = parseUtil.removeCaret(str);
+        str = parseUtil.reduceSpaceLines(str);
+        str = parseUtil.removeIndent(str);
         str = str.trim();
 
         let strBlocks = str.split(/\n{2,}/gm);
 
-        /* ! */ let blocks = [];
+        let blocks = [];
 
         let insideObjBlock = false;
         let strObjBlock = '';
@@ -62,42 +62,77 @@ export class Parser
         if (strObjBlock !== '')
             blocks.push(this.parseStrBlock(strObjBlock, result));
 
-        //
-
         blocks.forEach(block =>
         {
+            result.blocks.push(block);
             result.heap.blocks.push(block);
-            let pushedIndex = result.heap.blocks.length - 1;
-            result.blocks.push(result.heap.blocks[pushedIndex]);
         });
 
         return result;
     }
 
-    private parseStrBlock(strBlock: string, parseResult: ParseResult): Block
+    parseStrBlock(strBlock: string, parseResult: ParseResult)
     {
-        for (let i = 0; i < this.blocks.length; i++)
+        for (let i = 0; i < this.fBlocks.length; i++)
         {
-            let Block = this.blocks[i];
+            let fBlock = this.fBlocks[i];
 
-            if (Block.canParse(strBlock))
-            {
-                //@ts-ignore
-                return new Block(strBlock, this, parseResult);
-            }
+            if (fBlock.canParse(strBlock))
+                return fBlock.parse(strBlock, this, parseResult);
         }
 
         return null;
     }
 
-    parseInline(str: string, handleInliners: (inliners: Inliner[]) => any)
+    parseInline(str: string, parseResult: ParseResult = null): string
     {
         let inliners = [];
-        this.inliners.forEach(Inliner => str = Inliner.render(str, inliners));
-        
-        if (handleInliners)
-            handleInliners(inliners);
+        let listener = (inliner: any) => inliners.push(inliner);
+
+        this.fInliners.forEach(fInliner =>
+        {
+            if (fInliner.essential)
+                fInliner.addParseListener(listener);
+
+            str = fInliner.render(str, this, parseResult);
+            
+            fInliner.removeParseListener(listener);
+        });
+
+        if (parseResult)
+        {
+            parseResult.inliners = parseResult.inliners.concat(inliners);
+            parseResult.heap.inliners = parseResult.heap.inliners.concat(inliners);
+        }
 
         return str;
+    }
+
+    render(blocks: ParseResult | any[])
+    {
+        if (!Array.isArray(blocks))
+            blocks = blocks.blocks;
+
+        let str = '';
+
+        blocks.forEach(block =>
+        {
+            str += this.renderBlock(block);
+        });
+
+        return str.replace(/>[\s]+</gm, '><');
+    }
+
+    renderBlock(block)
+    {
+        for (let i = 0; i < this.fBlocks.length; i++)
+        {
+            let fBlock = this.fBlocks[i];
+
+            if (fBlock.canRender(block))
+                return fBlock.render(block, this);
+        }
+
+        return null;
     }
 }

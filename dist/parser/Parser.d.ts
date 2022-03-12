@@ -1,15 +1,13 @@
-import { Block } from "../block/Block";
-import { Inliner } from "../inliner/Inliner";
+import { BlockFactory } from "../factory/BlockFactory";
+import { InlinerFactory } from "../factory/InlinerFactory";
 import { ParseResult } from "../parser/ParseResult";
-import { Heap } from "./Heap";
 export declare class Parser {
-    rootPath: string;
-    mustaches: {
-        [key: string]: any;
-    };
-    blocks: typeof Block[];
-    inliners: typeof Inliner[];
-    parse(str: string, parent?: ParseResult | Heap): ParseResult;
-    private parseStrBlock;
-    parseInline(str: string, handleInliners: (inliners: Inliner[]) => any): string;
+    meta: object;
+    fBlocks: BlockFactory<any>[];
+    fInliners: InlinerFactory<any>[];
+    parse(str: string, parent?: ParseResult): ParseResult;
+    parseStrBlock(strBlock: string, parseResult: ParseResult): any;
+    parseInline(str: string, parseResult?: ParseResult): string;
+    render(blocks: ParseResult | any[]): string;
+    renderBlock(block: any): string;
 }

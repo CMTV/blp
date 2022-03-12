@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.0
+
+* Package rewritten from scratch.
+
 ## 1.0.3
 
 * Fix import format.

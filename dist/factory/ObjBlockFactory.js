@@ -18,23 +18,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
-exports.BlockObject = void 0;
+exports.ObjBlockFactory = void 0;
 var yaml_1 = __importDefault(require("yaml"));
-var Block_1 = require("../block/Block");
-var BlockObject = /** @class */ (function (_super) {
-    __extends(BlockObject, _super);
-    function BlockObject() {
+var BlockFactory_1 = require("../factory/BlockFactory");
+var ObjBlockFactory = /** @class */ (function (_super) {
+    __extends(ObjBlockFactory, _super);
+    function ObjBlockFactory() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    BlockObject.prototype.parse = function (str) {
-        var yaml = str.replace(/^@(.+)$/m, '');
-        this.parseObj(yaml_1["default"].parse(yaml));
+    ObjBlockFactory.prototype.parse = function (str, parser, parseResult) {
+        var yaml = str.substring(str.indexOf('\n') + 1);
+        return this.parseObj(yaml_1["default"].parse(yaml), parser, parseResult);
     };
-    BlockObject.canParse = function (str) {
-        if (!this.objType)
-            return false;
+    ObjBlockFactory.prototype.canParse = function (str) {
         return str.startsWith('@' + this.objType);
     };
-    return BlockObject;
-}(Block_1.Block));
-exports.BlockObject = BlockObject;
+    return ObjBlockFactory;
+}(BlockFactory_1.BlockFactory));
+exports.ObjBlockFactory = ObjBlockFactory;

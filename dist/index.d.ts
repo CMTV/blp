@@ -1,8 +1,9 @@
-import { Block } from "./block/Block";
-import { BlockObject } from "./block/BlockObject";
-import { Inliner } from "./inliner/Inliner";
+import { Factory } from "./factory/Factory";
+import { BlockFactory } from "./factory/BlockFactory";
+import { ObjBlockFactory } from "./factory/ObjBlockFactory";
+import { InlinerFactory } from "./factory/InlinerFactory";
 import { Heap } from "./parser/Heap";
 import { Parser } from "./parser/Parser";
 import { ParseResult } from "./parser/ParseResult";
 import util from "./parser/util";
-export { Block, BlockObject, Inliner, Heap, Parser, ParseResult, util };
+export { Factory, BlockFactory, ObjBlockFactory, InlinerFactory, Heap, Parser, ParseResult, util };
