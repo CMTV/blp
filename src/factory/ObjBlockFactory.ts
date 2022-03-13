@@ -4,10 +4,10 @@ import { BlockFactory } from 'src/factory/BlockFactory';
 import { Parser } from 'src/parser/Parser';
 import { ParseResult } from 'src/parser/ParseResult';
 
-export abstract class ObjBlockFactory<TObjBlock extends object> extends BlockFactory<TObjBlock>
+export abstract class ObjBlockFactory<TObj extends object, TObjBlock extends object> extends BlockFactory<TObjBlock>
 {
     abstract objType: string;
-    abstract parseObj(obj: any, parser: Parser, parseResult: ParseResult): TObjBlock;
+    abstract parseObj(obj: TObj, parser: Parser, parseResult: ParseResult): TObjBlock;
 
     parse(str: string, parser: Parser, parseResult: ParseResult)
     {
