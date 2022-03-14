@@ -1,6 +1,6 @@
 type ParseListener<TProduct> = (product: TProduct) => void;
 
-export abstract class Factory<TProduct extends object>
+export abstract class Factory<TProduct>
 {
     private parseListeners: ParseListener<TProduct>[] = [];
 
