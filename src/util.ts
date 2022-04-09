@@ -24,12 +24,12 @@ function removeIndent(str: string)
 
     if (!spaces)
         return str;
-    
+
     let indent = Math.min(...spaces.map(match => match.length));
 
     if (indent === 0)
         return str;
-
+        
     let indentRegexp = new RegExp(`^[ \\t]{${indent}}`, 'gm');
 
     return str.replace(indentRegexp, '');

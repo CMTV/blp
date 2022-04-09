@@ -1,24 +1,27 @@
-import { Factory } from "src/factory/Factory";
-import { BlockFactory } from "src/factory/BlockFactory";
-import { ObjBlockFactory } from "src/factory/ObjBlockFactory";
-import { InlinerFactory } from "src/factory/InlinerFactory";
+import Product from "src/Product";
+import IFactory from "src/IFactory";
+import Parser from "src/Parser";
+import Range from "src/Range";
+import util from "src/util";
 
-import { Heap } from "src/parser/Heap";
-import { Parser } from "src/parser/Parser";
-import { ParseResult } from "src/parser/ParseResult";
-
-import util from "src/parser/util";
+import { Block, BlockFactory, BlockObjFactory, Paragraph } from "src/block";
+import { Inliner, InlinerFactory, InlinerRegExpFactory, Plain } from "src/inliner";
 
 export
 {
-    Factory,
-    BlockFactory,
-    ObjBlockFactory,
-    InlinerFactory,
-
-    Heap,
+    Product,
+    IFactory,
     Parser,
-    ParseResult,
+    Range,
+    util,
 
-    util
+    Block,
+    BlockFactory,
+    BlockObjFactory,
+    Paragraph,
+
+    Inliner,
+    InlinerFactory,
+    InlinerRegExpFactory,
+    Plain
 }
