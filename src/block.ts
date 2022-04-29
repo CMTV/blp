@@ -25,8 +25,8 @@ export class Paragraph extends Block
 
 export abstract class BlockFactory<TBlock extends Block> implements IFactory<TBlock>
 {
-    abstract canParse(str: string, parser: Parser);
-    abstract parse(str: string, parser: Parser);
+    abstract canParse(str: string, parser: Parser): boolean;
+    abstract parse(str: string, parser: Parser): TBlock;
 }
 
 export abstract class BlockObjFactory<TBlock extends Block, TObj = any> extends BlockFactory<TBlock>

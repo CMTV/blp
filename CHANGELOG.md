@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.1
+
+* Fixed return type restriction in `BlockFactory` class.
+
 ## 2.0.0
 
 Package was rewritten from scratch.
