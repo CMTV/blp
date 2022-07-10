@@ -1,6 +1,6 @@
 import Product from "src/Product";
 import Range from "src/Range";
-import Parser from "src/Parser";
+import { Context } from "src/Parser";
 import IFactory from "src/IFactory";
 
 export abstract class Inliner extends Product {}
@@ -24,14 +24,14 @@ export class Plain extends Inliner
 
 export abstract class InlinerFactory<TInliner extends Inliner> implements IFactory<TInliner>
 {
-    abstract detectRanges(str: string, parser: Parser): Range[];
-    abstract parse(str: string, parser: Parser): TInliner;    
+    abstract detectRanges(str: string, ctx: Context): Range[];
+    abstract parse(str: string, ctx: Context): TInliner;    
 }
 
 export abstract class InlinerRegExpFactory<TInliner extends Inliner> extends InlinerFactory<TInliner>
 {
     abstract regexp: RegExp;
-    abstract parseMatch(match: RegExpExecArray, parser: Parser): TInliner;
+    abstract parseMatch(match: RegExpExecArray, ctx: Context): TInliner;
 
     detectRanges(str: string): Range[]
     {
@@ -55,11 +55,11 @@ export abstract class InlinerRegExpFactory<TInliner extends Inliner> extends Inl
         return ranges;
     }
 
-    parse(str: string, parser: Parser): TInliner
+    parse(str: string, ctx: Context): TInliner
     {
         let match = this.regexp.exec(str);
         this.regexp.lastIndex = 0;
         
-        return this.parseMatch(match, parser);
+        return this.parseMatch(match, ctx);
     }
 }

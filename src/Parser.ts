@@ -3,26 +3,50 @@ import util from "src/util";
 
 import { Inliner, InlinerFactory, Plain } from "src/inliner";
 import { Block, BlockFactory, Paragraph } from "src/block";
+import BlockMeta from "src/BlockMeta";
+
+export class Context
+{
+    parser: Parser;
+    extra: object;
+
+    static createFrom(parser: Parser, extra: object = {}): Context
+    {
+        let ctx = new Context;
+            ctx.parser = parser;
+            ctx.extra = extra;
+
+        return ctx;
+    }
+}
 
 export default class Parser
 {
     blockFactories: InstanceType<typeof BlockFactory>[] = [];
     inlineFactories: InstanceType<typeof InlinerFactory>[] = [];
 
-    parseBlock(strBlock: string): Block
+    productCallback: (products: Block[] | Inliner[]) => void;
+
+    parseBlock(strBlock: string, extra: object): Block
     {
         for (let i = 0; i < this.blockFactories.length; i++)
         {
             let blockFactory = this.blockFactories[i];
 
-            if (blockFactory.canParse(strBlock, this))
-                return blockFactory.parse(strBlock, this);
+            let meta = BlockMeta.createFrom(strBlock);
+            if (meta)
+                strBlock = strBlock.substring(strBlock.indexOf('\n') + 1);
+
+            let context = Context.createFrom(this, extra);
+
+            if (blockFactory.canParse(strBlock, context))
+                return blockFactory.parse(strBlock, context, meta);
         }
 
         return new Paragraph(strBlock, this);        
     }
 
-    parseBlocks(str: string): Block[]
+    parseBlocks(str: string, extra: object = {}): Block[]
     {
         if (!str)
             return [];
@@ -48,7 +72,7 @@ export default class Parser
                     strObjBlock += '\n\n' + strBlock;
                 else
                 {
-                    blocks.push(this.parseBlock(strObjBlock));
+                    blocks.push(this.parseBlock(strObjBlock, extra));
                     strObjBlock = '';
                     insideObjBlock = false;
                 }
@@ -61,17 +85,19 @@ export default class Parser
                     insideObjBlock = true;
                     strObjBlock += strBlock;
                 }
-                else blocks.push(this.parseBlock(strBlock));
+                else blocks.push(this.parseBlock(strBlock, extra));
             }
         }
 
         if (strObjBlock !== '')
-            blocks.push(this.parseBlock(strObjBlock));
+            blocks.push(this.parseBlock(strObjBlock, extra));
+
+        this.productCallback(blocks);
 
         return blocks;
     }
 
-    parseInliners(str: string, factories = [...this.inlineFactories]): Inliner[]
+    parseInliners(str: string, extra: object = {}, factories = [...this.inlineFactories]): Inliner[]
     {
         if (factories.length === 0)
             return [new Plain(str)];
@@ -80,7 +106,9 @@ export default class Parser
 
         let factory = factories.shift();
 
-        let ranges = factory.detectRanges(str, this);
+        let context = Context.createFrom(this, extra);
+
+        let ranges = factory.detectRanges(str, context);
             ranges = Range.sortRanges(...ranges);
 
         if (Range.hasIntersection(...ranges))
@@ -94,7 +122,7 @@ export default class Parser
             end = range.start;
 
             inliners.push(...this.parseInliners(str.substring(start, end), [...factories]));
-            inliners.push(factory.parse(str.substring(range.start, range.end), this));
+            inliners.push(factory.parse(str.substring(range.start, range.end), context));
 
             start = range.end;
             end = str.length;
@@ -102,7 +130,9 @@ export default class Parser
 
         let lastFragment = str.substring(start, end);
         if (lastFragment)
-            inliners.push(...this.parseInliners(lastFragment, [...factories]));
+            inliners.push(...this.parseInliners(lastFragment, extra, [...factories]));
+
+        this.productCallback(inliners);
 
         return inliners;
     }

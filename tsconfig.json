@@ -11,7 +11,7 @@
         "outDir": "dist",
         "declaration": true
     },
-
+    
     "include": ["src/**/*"],
 
     "ts-node": { "require": ["tsconfig-paths/register"] },
