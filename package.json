@@ -1,6 +1,6 @@
 {
     "name": "blp",
-    "version": "3.0.0",
+    "version": "3.0.1",
     "description": "Blank Line Parser. Convert text into array of objects. Nesting supported.",
     "author": "CMTV",
     "license": "MIT",

@@ -1,7 +1,7 @@
 import BlockMeta from "./BlockMeta";
 import { FParagraph, FText } from "./default";
-import { BlockFactory, InlinerFactory } from "./factory";
-import { Block, Inliner } from "./product";
+import { BlockFactory, Factory, InlinerFactory } from "./factory";
+import { Block, Inliner, Product } from "./product";
 import util from "./util";
 
 export type TFactory<TFactoryType> = (new (parser: Parser) => TFactoryType);
@@ -11,7 +11,8 @@ export class Parser
     blockFactories: TFactory<BlockFactory<Block>>[] = [];
     inlineFactories: TFactory<InlinerFactory<Inliner>>[] = [];
 
-    productCallback: (products: Block[] | Inliner[]) => void;
+    fabricateCb:    (product: Product, factory: Factory<Product>) => void;
+    productCb:      (products: Product[]) => void;
 
     parseBlocks(str: string): Block[]
     {
@@ -68,8 +69,8 @@ export class Parser
 
         blocks = blocks.filter(block => !!block);
 
-        if (this.productCallback)
-            this.productCallback(blocks);
+        if (this.productCb)
+            this.productCb(blocks);
 
         return blocks;
     }
@@ -122,8 +123,8 @@ export class Parser
                             .map(item => typeof item === 'string' ? new FText(this).fabricate(item) : item)
                             .filter(item => !!item);
 
-        if (this.productCallback)
-            this.productCallback(inliners);
+        if (this.productCb)
+            this.productCb(inliners);
 
         return inliners;
     }
