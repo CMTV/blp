@@ -1,1 +1,0 @@
-* In `productCallback` provide information about parent and children products.

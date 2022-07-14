@@ -1,12 +1,14 @@
 export default class BlockMeta
 {
-    id?:        string;
-    classList?: string[];
-    other?:     string[];
-    
+    id?:         string;
+    classList?:  string[];
+    other?:      string[];
+
+    static regexp = /^{(.+)}$/m;
+
     static createFrom(str: string): BlockMeta
     {
-        let metaMatch = str.match(/^{(.+)}$/m);
+        let metaMatch = str.match(BlockMeta.regexp);
 
         if (!metaMatch)
             return null;

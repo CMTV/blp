@@ -1,7 +1,9 @@
-export default {
+export default
+{
     removeCaret,
     reduceSpaceLines,
-    removeIndent
+    removeIndent,
+    skipFirstLine
 }
 
 //
@@ -33,4 +35,9 @@ function removeIndent(str: string)
     let indentRegexp = new RegExp(`^[ \\t]{${indent}}`, 'gm');
 
     return str.replace(indentRegexp, '');
+}
+
+function skipFirstLine(str: string)
+{
+    return str.substring(str.indexOf('\n') + 1);
 }
