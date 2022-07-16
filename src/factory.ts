@@ -48,7 +48,7 @@ export abstract class BlockFactory<TBlock extends Block> extends Factory<TBlock>
     }
 }
 
-export abstract class BlockObjFactory<TBlock extends Block, TObj = object> extends BlockFactory<TBlock>
+export abstract class BlockObjFactory<TBlock extends Block, TObj extends object = any> extends BlockFactory<TBlock>
 {
     abstract objType: string;
     protected abstract parseObj(obj: TObj): TBlock;
