@@ -21,7 +21,7 @@ export abstract class Factory<TProduct extends Product>
         this.postParse(product);
         
         let cbResult = this.parser.fabricateCb(product, this);
-        if (cbResult)
+        if (typeof cbResult !== 'undefined')
             product = cbResult as any;
 
         return product;

@@ -70,7 +70,7 @@ export class Parser
         if (this.productCb)
         {
             let cbResult = this.productCb(blocks);
-            if (cbResult)
+            if (typeof cbResult !== 'undefined')
                 blocks = cbResult;
         }
 
@@ -128,7 +128,7 @@ export class Parser
         if (this.productCb)
         {
             let cbResult = this.productCb(inliners);
-            if (cbResult)
+            if (typeof cbResult !== 'undefined')
                 inliners = cbResult;
         }
 
