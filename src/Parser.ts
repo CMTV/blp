@@ -67,10 +67,10 @@ export class Parser
         if (strObjBlock !== '')
             blocks.push(this.parseBlock(strObjBlock, strObjBlockMeta));
 
-        blocks = blocks.filter(block => !!block);
-
         if (this.productCb)
             this.productCb(blocks);
+
+        blocks = blocks.filter(block => !!block);
 
         return blocks;
     }
@@ -119,12 +119,12 @@ export class Parser
             });
         });
 
-        let inliners = resultArr
-                            .map(item => typeof item === 'string' ? new FText(this).fabricate(item) : item)
-                            .filter(item => !!item);
+        let inliners = resultArr.map(item => typeof item === 'string' ? new FText(this).fabricate(item) : item);
 
         if (this.productCb)
             this.productCb(inliners);
+
+        inliners = inliners.filter(item => !!item);
 
         return inliners;
     }
