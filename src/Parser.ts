@@ -11,8 +11,8 @@ export class Parser
     blockFactories: TFactory<BlockFactory<Block>>[] = [];
     inlineFactories: TFactory<InlinerFactory<Inliner>>[] = [];
 
-    fabricateCb:    (product: Product, factory: Factory<Product>) => void;
-    productCb:      (products: Product[]) => void;
+    fabricateCb:    (product: Product, factory: Factory<Product>) => void | Product;
+    productCb:      (products: Product[]) => void | Product[];
 
     parseBlocks(str: string): Block[]
     {
@@ -68,7 +68,11 @@ export class Parser
             blocks.push(this.parseBlock(strObjBlock, strObjBlockMeta));
 
         if (this.productCb)
-            this.productCb(blocks);
+        {
+            let cbResult = this.productCb(blocks);
+            if (cbResult)
+                blocks = cbResult;
+        }
 
         blocks = blocks.filter(block => !!block);
 
@@ -122,7 +126,11 @@ export class Parser
         let inliners = resultArr.map(item => typeof item === 'string' ? new FText(this).fabricate(item) : item);
 
         if (this.productCb)
-            this.productCb(inliners);
+        {
+            let cbResult = this.productCb(inliners);
+            if (cbResult)
+                inliners = cbResult;
+        }
 
         inliners = inliners.filter(item => !!item);
 

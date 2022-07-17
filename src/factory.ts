@@ -20,7 +20,9 @@ export abstract class Factory<TProduct extends Product>
         let product = this.parse(str);
         this.postParse(product);
         
-        this.parser.fabricateCb(product, this);
+        let cbResult = this.parser.fabricateCb(product, this);
+        if (cbResult)
+            product = cbResult as any;
 
         return product;
     }
